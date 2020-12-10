@@ -1,4 +1,4 @@
-obj-m += cpu.o
+obj-m += memo_201504002.o
 all:
 	$(MAKE) -C /lib/modules/`uname -r`/build M=$(PWD) modules
 
