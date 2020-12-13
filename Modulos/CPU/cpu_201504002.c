@@ -12,13 +12,13 @@ MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Inti Samayoa");
 MODULE_DESCRIPTION("201504002");
 
-static int __init lkm_example_init(void) {
- printk(KERN_INFO "Hello, World!\n");
+static int __init inicio(void) {
+ printk(KERN_INFO "Inti\n");
  return 0;
 }
-static void __exit lkm_example_exit(void) {
- printk(KERN_INFO "Goodbye, World!\n");
+static void __exit salida(void) {
+ printk(KERN_INFO "Sistemas Operativos 1\n");
 }
-module_init(lkm_example_init);
+module_init(inicio);
 
-module_exit(lkm_example_exit);
+module_exit(salida);
