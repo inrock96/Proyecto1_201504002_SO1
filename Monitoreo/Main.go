@@ -26,6 +26,13 @@ func reader(conn *websocket.Conn) {
 			log.Println(err)
 			return
 		}
+		switch os := string(p); os {
+		case "memoria":
+
+		case "principal":
+		case "cpu":
+		default:
+		}
 	}
 }
 
