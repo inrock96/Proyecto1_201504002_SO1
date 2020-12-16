@@ -1,1 +1,34 @@
-<p>cpu works!</p>
+<div class="container">
+    <div class="text ">Central Processing Unit</div>
+    <div class="row justify-content-md-center">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-block">
+                    <h4 class="card-title">Porcentaje CPU</h4>
+                    <h6 class="card-subtitle text-muted">Support card subtitle</h6>
+                    <p class="card-text p-y-1">Some quick example text to build on the card title .</p>
+                    <a href="#" class="card-link">link</a>
+                    <a href="#" class="card-link">Second link</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div style="display: block;" class="chart">
+              <canvas baseChart width="40" height="20"
+                     
+                      [datasets]="labelMFL"
+                      [labels]="lineChartLabels"
+                      [options]="lineChartOptions"
+                      [colors]="lineChartColors"
+                      
+                      [legend]="lineChartLegend"
+                      [chartType]="lineChartType"
+                      (chartHover)="chartHovered($event)"
+                      (chartClick)="chartClicked($event)"></canvas>
+            </div>
+          </div>
+    </div>
+
+</div>
