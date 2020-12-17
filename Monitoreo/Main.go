@@ -90,7 +90,7 @@ func envioInfo() {
 			var value string = clients[client]
 			log.Println(value)
 			salidaLista := ListaProceso{}
-			memo := Memoria{}
+			var memo *Memoria
 			if value == "PRINCIPAL" {
 				//PAGINA PRINCIPAL
 				data, err := ioutil.ReadFile("/proc/cpu_201504002")
@@ -116,7 +116,8 @@ func envioInfo() {
 				}
 				strData := string(data)
 				json.Unmarshal([]byte(strData), &memo)
-				if errW := client.WriteJSON(memo); errW != nil {
+				errW := client.WriteJSON(memo)
+				if errW != nil {
 					log.Printf("error %v", errW)
 					client.Close()
 					delete(clients, client)
@@ -127,8 +128,7 @@ func envioInfo() {
 				killHandler(value)
 			}
 		}
-
-		fmt.Println(len(clients))
+		log.Println(len(clients))
 		log.Printf("------------------")
 		time.Sleep(2000 * time.Millisecond)
 	}

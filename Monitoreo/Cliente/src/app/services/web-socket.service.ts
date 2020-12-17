@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Socket } from 'net';
 
 @Injectable({
   providedIn: 'root'
@@ -13,15 +12,19 @@ export class WebSocketService {
   procesos:any
   constructor() { }
   public openWebSocket(){
+    this.mensajes = []
     this.webSocket = new WebSocket(`${this.WS_URI}/ws`);
     this.webSocket.onopen = (event)=>{
       console.log('Open: ',event)
     }
     this.webSocket.onmessage= msg=>{
-      if(msg.data!="RAM"){
+      try {
         const chatMessageDto = JSON.parse(msg.data);
         this.mensajes.push(chatMessageDto);
-      }
+      } catch (error) {
+        
+      } 
+      
     }
     this.webSocket.onclose = (event)=>{
       console.log('Close: ',event)

@@ -3,6 +3,8 @@ import { ChartDataSets, ChartOptions} from 'chart.js';
 import { Color, Label,ThemeService } from 'ng2-charts';
 import { BaseChartDirective } from "ng2-charts";
 import {Chart} from 'chart.js';
+import { Memoria } from 'src/app/models/Memoria';
+import { WebSocketService } from 'src/app/services/web-socket.service';
 @Component({
   selector: 'app-memoria',
   templateUrl: './memoria.component.html',
@@ -14,7 +16,7 @@ export class MemoriaComponent implements OnInit {
 // lineChart
 public label = 10;
 public a = 0;
-
+public memo:Memoria
 public lineChartData: Array<any> = [0, 0, 0, 0, 0, 0, 0, 0,0,0,0];
 
 public lineChartLabels: Array<any> = ["1", "2", "3", "4", "4", "5", "6", "7", "8", "9"];
@@ -59,20 +61,32 @@ public chartHovered(e: any): void {
   console.log(e);
 }
 
-constructor() {}
+constructor(private webSocketService:WebSocketService) {}
 
 ngOnInit() {
+  this.webSocketService.openWebSocket()
   setInterval(() => {
-    const _lineChartData = this.lineChartData;
-    const _lineChartLabels = this.lineChartLabels;
-    _lineChartData.push(Math.floor(Math.random() * 100 + 1));
-    _lineChartLabels.push(this.label);
-    this.label++;
-    this.lineChartData.splice(0, 1);
-    this.lineChartLabels.splice(0, 1);
-    this.lineChartData = _lineChartData;
-    this.lineChartLabels = _lineChartLabels;
-    this.chart.chart.update();
-  }, 10000);
+    this.webSocketService.enviarMensaje("RAM");
+    try {
+      const memo = this.webSocketService.mensajes.pop();
+      this.memo = <Memoria>memo;
+      console.log(this.memo)
+      const _lineChartData = this.lineChartData;
+      const _lineChartLabels = this.lineChartLabels;
+      _lineChartData.push(this.memo.MemPercent);
+      _lineChartLabels.push(this.label);
+      this.label++;
+      this.lineChartData.splice(0, 1);
+      this.lineChartLabels.splice(0, 1);
+      this.lineChartData = _lineChartData;
+      this.lineChartLabels = _lineChartLabels;
+      this.chart.chart.update();
+    
+    } catch (error) {
+      
+    }
+    
+    
+  }, 2000);
 }
 }
