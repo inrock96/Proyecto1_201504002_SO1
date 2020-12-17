@@ -1,5 +1,9 @@
 <div class="container">
-    <div class="text ">Central Processing Unit</div>
+    <div class = "row">
+        <div class="mx-auto">
+            <h1 class="title">Módulo CPU</h1>
+        </div>
+    </div>
     <div class="row justify-content-md-center">
         <div class="col-md-4">
             <div class="card">
@@ -20,8 +24,6 @@
                       [labels]="lineChartLabels"
                       [options]="lineChartOptions"
                       [colors]="lineChartColors"
-                      
-                      [legend]="lineChartLegend"
                       [chartType]="lineChartType"
                       (chartHover)="chartHovered($event)"
                       (chartClick)="chartClicked($event)"></canvas>

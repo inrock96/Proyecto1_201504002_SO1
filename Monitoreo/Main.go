@@ -183,7 +183,8 @@ func killHandler(pid string) {
 
 func main() {
 	fmt.Println("Go Websockets")
-	fs := http.FileServer(http.Dir("./Dist"))
+	fs := http.FileServer(http.Dir("./static"))
+	http.Handle("/static/", http.StripPrefix("/static/", fs))
 	http.Handle("/", fs)
 	http.HandleFunc("/ws", wsEndpoint)
 	go envioInfo()

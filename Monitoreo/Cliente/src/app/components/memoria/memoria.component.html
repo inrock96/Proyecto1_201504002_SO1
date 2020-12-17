@@ -1,5 +1,9 @@
 <div class="container">
-    <div class="text">Memory card</div>
+    <div class = "row">
+        <div class="mx-auto">
+            <h1 class="title">Módulo RAM</h1>
+        </div>
+    </div>
     <div class="row">
         <div class="col-md-4">
             <div class="card">
@@ -23,7 +27,7 @@
             <div class="card">
                 <div class="card-block">
                     <h4 class="card-title">Porcentaje de memoria utilizada</h4>
-                    <h6 class="card-subtitle text-muted">MegaBytes</h6>
+                    <h6 class="card-subtitle text-muted">%</h6>
                     <p class="card-text p-y-1">{{this.memo.MemPercent}}</p>
                 </div>
             </div>
@@ -38,7 +42,6 @@
                 [options]="lineChartOptions"
                 [colors]="lineChartColors"
                 
-                [legend]="lineChartLegend"
                 [chartType]="lineChartType"
                 (chartHover)="chartHovered($event)"
                 (chartClick)="chartClicked($event)"></canvas>
