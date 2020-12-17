@@ -34,7 +34,7 @@ static int cpu_show(struct seq_file*m,void *v){
     struct task_struct *task;
     struct task_struct *task_child;
     
-    seq_printf(m,"{\nprocesos:[");
+    seq_printf(m,"{\n\"procesos\":[");
     for_each_process(task){ 
         struct list_head *list;
 
@@ -62,7 +62,7 @@ static int cpu_show(struct seq_file*m,void *v){
             strcpy(user,"inti");
         }
         //imprimir proceso padre
-        seq_printf(m,"{\n pid:%d,\n nombre:\"%s0\",\n usuario:\"%s\",\n estado:%c}",
+        seq_printf(m,"{\n \"pid\":\"%d\",\n \"nombre\":\"%s0\",\n \"usuario\":\"%s\",\n \"estado\":\"%c\"}",
         task->pid,
         task->comm,
         user,
@@ -94,7 +94,7 @@ static int cpu_show(struct seq_file*m,void *v){
                 strcpy(user,"inti");
             }
             //imprimir proceso padre
-            seq_printf(m,",{\n pid:%d,\n nombre:\"%s0\",\n usuario:\"%s\",\n estado:%c}",
+            seq_printf(m,",{\n \"pid\":\"%d\",\n \"nombre\":\"%s0\",\n \"usuario\":\"%s\",\n \"estado\":\"%c\"}",
             task_child->pid,
             task_child->comm,
             user,
@@ -106,7 +106,7 @@ static int cpu_show(struct seq_file*m,void *v){
     }
     seq_printf(m,"]\n");
     total = proc_ejec+proc_susp+proc_stop+proc_zombie+proc_otro;
-    seq_printf(m,",\nejecucion:%d,suspendido:%d,detenido:%d,zombie:%d,otros:%d,total:%d\n}",
+    seq_printf(m,",\n\"ejecucion\":\"%d\",\"suspendido\":\"%d\",\"detenido\":\"%d\",\"zombie\":\"%d\",\"otros\":\"%d\",\"total\":\"%d\"\n}",
     proc_ejec,
     proc_susp,
     proc_stop,

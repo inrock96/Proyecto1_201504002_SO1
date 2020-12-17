@@ -3,6 +3,8 @@ import { ChartDataSets, ChartOptions} from 'chart.js';
 import { Color, Label,ThemeService } from 'ng2-charts';
 import { BaseChartDirective } from "ng2-charts";
 import {Chart} from 'chart.js';
+import { WebSocketService } from 'src/app/services/web-socket.service';
+import { Memoria } from 'src/app/models/Memoria';
 @Component({
   selector: 'app-cpu',
   templateUrl: './cpu.component.html',
@@ -35,7 +37,7 @@ export class CPUComponent implements OnInit {
     }
   };
   
-  public labelMFL: Array<any> = [{ data: this.lineChartData, label: "Memoria Utilizada" }];
+  public labelMFL: Array<any> = [{ data: this.lineChartData, label: "CPU Utilizado" }];
   
   public lineChartColors: Array<any> = [
     {
@@ -60,13 +62,19 @@ export class CPUComponent implements OnInit {
     console.log(e);
   }
   
-  constructor() {}
+  memo:Memoria
+  constructor(private wsService:WebSocketService) {}
   
   ngOnInit() {
+    this.wsService.openWebSocket();
     setInterval(() => {
+      this.wsService.enviarMensaje("CPU");
+    try {
+      const memo = this.wsService.mensajes.pop();
+      this.memo = <Memoria>memo;
       const _lineChartData = this.lineChartData;
       const _lineChartLabels = this.lineChartLabels;
-      _lineChartData.push(Math.floor(Math.random() * 100 + 1));
+      _lineChartData.push(this.memo.MemPercent);
       _lineChartLabels.push(this.label);
       this.label++;
       this.lineChartData.splice(0, 1);
@@ -74,7 +82,14 @@ export class CPUComponent implements OnInit {
       this.lineChartData = _lineChartData;
       this.lineChartLabels = _lineChartLabels;
       this.chart.chart.update();
-    }, 10000);
+    
+    } catch (error) {
+      
+    }
+    }, 2000);
+  }
+  ngOnDestroy(){
+    this.wsService.closeWebSocket()
   }
 
 }

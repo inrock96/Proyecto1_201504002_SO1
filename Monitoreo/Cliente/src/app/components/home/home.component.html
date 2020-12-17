@@ -1,1 +1,86 @@
-<p>home works!</p>
+<div class="container">
+    <div class = "row">
+        <div class="mx-auto">
+            <h1 class="title">Monitoreo procesos</h1>
+        </div>
+    </div>
+    <div class="row p-y-5">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-block">
+                    <h4 class="card-title">Procesos en Ejecución</h4>
+                    <p class="card-text p-y-1">{{lista.ejecucion}}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-block">
+                    <h4 class="card-title">Procesos Suspendidos</h4>
+                    <p class="card-text p-y-1">{{lista.suspendido}}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-block">
+                    <h4 class="card-title">Procesos Detenidos</h4>
+                    <p class="card-text p-y-1">{{lista.detenido}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-block">
+                    <h4 class="card-title">Procesos Zombie</h4>
+                    <p class="card-text p-y-1" *ngIf="lista.zombie>=0">{{lista.zombie}}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-block">
+                    <h4 class="card-title">Otros Procesos</h4>
+                    <p class="card-text p-y-1">{{lista.otros}}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-block">
+                    <h4 class="card-title">Total de Procesos</h4>
+                    <p class="card-text p-y-1">{{lista.total}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <!-- Crear Tablita -->
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">PID</th>
+                        <th scope="col">Nombre Proceso</th>
+                        <th scope="col">Usuario</th>
+                        <th scope="col">Estado</th>
+                        <th scope="col">Kill</th>
+                    </tr>
+                </thead>
+                <tbody *ngFor="let proceso of lista.procesos | keyvalue">
+                    <tr class="clickable-row" >
+                      <td>{{proceso.value['pid']}}</td>
+                      <td>{{proceso.value['nombre']}}</td>
+                      <td>{{proceso.value['usuario']}}</td>
+                      <td>{{proceso.value['estado']}}</td>
+                      
+                    <td><button  type="button" (click)="kill(proceso.value['pid'])" class="btn  btn-danger ">Kill</button></td>
+                    </tr>
+                    
+                  </tbody>
+            </table>
+        </div>
+    </div>
+</div>

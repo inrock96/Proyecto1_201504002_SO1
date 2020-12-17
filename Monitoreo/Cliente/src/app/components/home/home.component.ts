@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ListaProceso } from 'src/app/models/ListaProceso';
+import { Proceso } from 'src/app/models/Proceso';
 import { WebSocketService } from 'src/app/services/web-socket.service';
 
 @Component({
@@ -7,18 +9,41 @@ import { WebSocketService } from 'src/app/services/web-socket.service';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-
-  constructor(private wsService:WebSocketService) { }
+  lista:ListaProceso
+  procesos:Proceso[]
+  constructor(private wsService:WebSocketService) { 
+    this.lista={
+      Procesos:[],
+      detenido:0,
+      ejecucion:0,
+      otros:0,
+      total:0,
+      suspendido:0,
+      zombie:0
+    }
+  }
 
   ngOnInit() {
     this.wsService.openWebSocket();
+    setInterval(()=>{
+      try {
+        this.wsService.enviarMensaje('PRINCIPAL');
+        const lista = this.wsService.mensajes.pop()
+        this.lista = <ListaProceso>lista;
+        console.log(this.lista)
+    
+      } catch (error) {
+          
+      }  
+      
+    },2000)
   }
   
   ngOnDestroy(){
     this.wsService.closeWebSocket();
   }
-  enviar(){
-    this.wsService.enviarMensaje('home');
+  kill(pid){
+    this.wsService.enviarMensaje(pid);
   }
 
 }

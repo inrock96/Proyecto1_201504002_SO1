@@ -70,7 +70,6 @@ ngOnInit() {
     try {
       const memo = this.webSocketService.mensajes.pop();
       this.memo = <Memoria>memo;
-      console.log(this.memo)
       const _lineChartData = this.lineChartData;
       const _lineChartLabels = this.lineChartLabels;
       _lineChartData.push(this.memo.MemPercent);

@@ -11,7 +11,9 @@ import (
 import (
 	"encoding/json"
 	"io/ioutil"
+	"os/exec"
 	"strconv"
+	"strings"
 	"syscall"
 	"time"
 )
@@ -26,13 +28,13 @@ type Proceso struct {
 
 //ListaProceso una lista de procesos
 type ListaProceso struct {
-	Lista            []Proceso `json:"procesos"`
+	Procesos         []Proceso `json:"procesos"`
 	TotalEjecucion   string    `json:"ejecucion"`
 	TotalSuspendidos string    `json:"suspendido"`
 	TotalDetenidos   string    `json:"detenido"`
 	TotalZombie      string    `json:"zombie"`
 	TotalOtros       string    `json:"otros"`
-	TotalProcesos    string    `json:"lista"`
+	TotalProcesos    string    `json:"total"`
 }
 
 //Memoria es la estructura para exportar datos de la memoria
@@ -101,7 +103,12 @@ func envioInfo() {
 				}
 
 				strData := string(data)
-				json.Unmarshal([]byte(strData), &salidaLista)
+				if erroJS := json.Unmarshal([]byte(strData), &salidaLista); erroJS != nil {
+					log.Printf("error %v", erroJS)
+					client.Close()
+					delete(clients, client)
+				}
+
 				//regresar respuesta salidalista
 				if errW := client.WriteJSON(salidaLista); errW != nil {
 					log.Printf("error %v", errW)
@@ -123,7 +130,38 @@ func envioInfo() {
 					delete(clients, client)
 				}
 			} else if value == "CPU" {
+				cmd := exec.Command("sh", "-c", "ps -eo pcpu | sort -k 1 -r | head -50")
+				out, err := cmd.CombinedOutput()
+				if err != nil {
+					log.Fatal(err)
+				}
 
+				//go fmt.Println("CPU obtenido correctamente")
+
+				output := string(out[:])
+				//fmt.Fprintf(w, output)
+				s := strings.Split(output, "\n")
+				cpuUsado := 0.0
+				for i := 1; i < 51; i++ {
+
+					valor, err := strconv.ParseFloat(strings.Trim(s[i], " "), 64)
+					if err != nil {
+						//go fmt.Println("valorError ->" + s[i] + "<-" + strconv.Itoa(i))
+						//go fmt.Println(err)
+					}
+
+					cpuUsado += valor
+					//go fmt.Println("valor ->" + s[i] + "<-" + strconv.Itoa(i))
+				}
+				strData := fmt.Sprint(cpuUsado)
+				strData = "{\"MemTotal\":\"0\",\"MemFree\":\"0\",\"MemPercent\":\"" + strData + "\"}"
+				json.Unmarshal([]byte(strData), &memo)
+				errW := client.WriteJSON(memo)
+				if errW != nil {
+					log.Printf("error %v", errW)
+					client.Close()
+					delete(clients, client)
+				}
 			} else {
 				killHandler(value)
 			}
@@ -133,12 +171,14 @@ func envioInfo() {
 		time.Sleep(2000 * time.Millisecond)
 	}
 }
-
 func killHandler(pid string) {
 	arg0 := pid
 	val0, _ := strconv.ParseInt(arg0, 10, 32)
 	pidfind := int(val0)
-	syscall.Kill(pidfind, 9)
+	err := syscall.Kill(pidfind, 9)
+	if err != nil {
+		log.Printf("error %v", err)
+	}
 }
 
 func main() {
