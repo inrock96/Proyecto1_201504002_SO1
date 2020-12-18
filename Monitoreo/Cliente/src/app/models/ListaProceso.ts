@@ -1,6 +1,6 @@
 import {Proceso} from './Proceso'
 export interface ListaProceso{
-    Procesos:Proceso[],
+    procesos:Proceso[],
     ejecucion :  number,
 	suspendido :number, 
 	detenido :  number, 

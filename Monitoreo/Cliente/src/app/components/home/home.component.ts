@@ -13,7 +13,7 @@ export class HomeComponent implements OnInit {
   procesos:Proceso[]
   constructor(private wsService:WebSocketService) { 
     this.lista={
-      Procesos:[],
+      procesos:[],
       detenido:0,
       ejecucion:0,
       otros:0,
@@ -30,8 +30,6 @@ export class HomeComponent implements OnInit {
         this.wsService.enviarMensaje('PRINCIPAL');
         const lista = this.wsService.mensajes.pop()
         this.lista = <ListaProceso>lista;
-        console.log(this.lista)
-    
       } catch (error) {
           
       }  
